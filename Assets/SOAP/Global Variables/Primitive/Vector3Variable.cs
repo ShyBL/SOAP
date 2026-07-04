@@ -25,9 +25,7 @@ namespace SOAP.Utility
 
         [System.NonSerialized]
         public Vector3 previousValue;
-
-        public event System.Action<Vector3> OnValueChanged;
-
+        
         public void OnAfterDeserialize() => currentValue = initialValue;
         public void OnBeforeSerialize() { }
 

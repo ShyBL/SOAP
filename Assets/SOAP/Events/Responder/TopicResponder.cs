@@ -6,7 +6,7 @@ namespace SOAP
     public class TopicResponder<T> : MonoBehaviour
     {
         [Header("Subscription")]
-        public GameChannel channel;
+        [SOCreate] public GameChannel channel;
         public GameTopic topicToListenFor;
         
         [Header("Extra Responses (No Data)")]

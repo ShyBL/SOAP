@@ -1,22 +1,22 @@
-using SOAP.Utility;
+﻿using SOAP.Utility;
 using UnityEngine;
 
 namespace SOAP
 {
-    public class FloatCollisionHandler : CollisionHandler
+    public class FloatChannelRaiser : MonoBehaviour
     {
-        [Header("Broadcast")]
-        public GameChannel channelToRaise;
+        [Header("Broadcast")] 
+        [SOCreate] public GameChannel channelToRaise;
         public GameTopic enterTopic = GameTopic.None;
-        public GameTopic exitTopic = GameTopic.None;
-        
+
         [Header("Data Configuration")]
         [Tooltip("The Global Variable asset to change (e.g., PlayerHealth).")]
-        [SerializeField] private FloatVariable floatVariable;
+        [SOCreate, SerializeField]
+        public FloatVariable floatVariable;
         
-        [Tooltip("The amount to change the variable by on collision.")]
-        [SerializeField] private FloatReference changeAmount;
-        
+        [Tooltip("The amount to change the variable by on collision.")] [SerializeField]
+        public FloatReference changeAmount;
+
         private void OnValidate()
         {
             if (channelToRaise == null)
@@ -26,7 +26,7 @@ namespace SOAP
                 UnityEditor.EditorApplication.isPlaying = false;
 #endif
             }
-            
+
             if (floatVariable == null)
             {
                 Debug.LogError($"FloatVariable to change is missing on {name}!", this);
@@ -34,7 +34,7 @@ namespace SOAP
                 UnityEditor.EditorApplication.isPlaying = false;
 #endif
             }
-            
+
             if (changeAmount == null)
             {
                 Debug.LogError($"FloatVariable change amount is missing on {name}!", this);
@@ -44,9 +44,16 @@ namespace SOAP
             }
         }
         
-        protected override void ApplyEffect(GameObject other)
+        public void ApplyEffect(bool subtract)
         {
-            floatVariable.Subtract(changeAmount.variable.currentValue);
+            if (subtract)
+            {
+                floatVariable.Subtract(changeAmount.variable.currentValue);
+            }
+            else
+            {
+                floatVariable.Add(changeAmount.variable.currentValue);
+            }
             channelToRaise.Raise(enterTopic, floatVariable.currentValue);
         }
     }
